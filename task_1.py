@@ -7,7 +7,6 @@ username = "test.user@sb-veevartsm.com"
 password = "Kaotiija5"
 
 # {Authorization: {'responseStatus': 'SUCCESS', 'sessionId': '5C337C9EBA7D9F1D744DBCEEE98E26E5AA08531766A6E6BB99522BA6DBCD0EA57C09E869B87F3A969E6EAA2611A6A55E82823C50BCA49A6FC0CEE50DD22FD8C9', 'userId': 18234483, 'vaultIds': [{'id': 177737, 'name': 'Veeva RTSM SBX', 'url': 'https://sb-veevartsm-veeva-rtsm-sbx.veevavault.com/api'}]
-# Function to get the authentication token
 
 
 
@@ -20,12 +19,26 @@ def get_auth_token():
 
 def read_study_deployment():
     token = get_auth_token()
-    headers = {"Authorization": token}
-    query = "SELECT * FROM documents"
-    response = requests.get(api_url , headers=headers, data = {'q': query})
+    deployment_table_url = "vobjects/study_deployment__c/"
+    headers = {"Authorization": token,
+               "Content-Type": "application/json"
+               }
     
-    print (response.json())
+    response = requests.get(api_url + deployment_table_url, headers=headers).json()
     
+    fields = 'build_status__c'
+
+    for table in response['data']:
+
+        # print (api_url + deployment_table_url + table['id'] + "/")
+            
+        response_2 = requests.get(api_url + deployment_table_url + table['id'] + "/", headers=headers, params={'fields': fields})    
+        records = response_2.json()
+        
+        
+    print(records)
+        
+        
     # if response.status_code == 200:
     #     return pd.DataFrame(response.json()['data'])
     # else:
