@@ -1,0 +1,70 @@
+{
+    "data": {
+    "client_name__c": "V4E000000001002",
+    "global_id__sys": "177737_V4V000000001019",
+    "name__v": "SDeploy_TEST123_TEST_2.3.8675.3090_dummy",
+    "populate_database__c": null,
+    "drug_supply__c": null,
+    "build_notes__c": null,
+    "system_change_request_number__c": "test",
+    "study_url__c": null,
+    "environment__c": [
+        "test__c"
+    ],
+    "link__sys": null,
+    "project_id__c": "V4A000000001001",
+    "created_date__v": "2023-12-13T20:30:53.000Z",
+    "id": "V4V000000001020",
+    "test_cycle_number__c": null,
+    "production_sql_updates__c": null,
+    "csv_attachment_order_of_operations__c": null,
+    "created_by__v": 17538197,
+    "protocol__c": "V4D000000001001",
+    "project_core__c": [
+        "2__c"
+    ],
+    "omni_audit_update__c": false,
+    "sponsor__c": "V4E000000001002",
+    "object_type__v": "OOT000000014001",
+    "system_change_request__c": false,
+    "modified_by__v": 18234483,
+    "deployment_type__c": [
+        "initial__c"
+    ],
+    "verify_the_backup_was_done__c": false,
+    "modified_date__v": "2023-12-13T21:26:52.000Z",
+    "nightly_task_runtime__c": null,
+    "build_version__c": "2.3.8675.3090",
+    "system_version__c": null,
+    "country__c": [
+        "canada__c",
+        "croatia__c",
+        "czechia__c",
+        "hungary__c"
+    ],
+    "build_status__c": [
+        "ready_for_deployment__c"
+    ],
+    "status__v": [
+        "active__v"
+    ]
+    },
+    
+    "manually_assigned_sharing_roles": {
+    "owner__v": {
+        "groups": null,
+        "users": [
+            17538197
+        ]
+    },
+    "viewer__v": {
+        "groups": null,
+        "users": null
+    },
+    "editor__v": {
+        "groups": null,
+        "users": [
+            18234483
+        ]
+    }
+}}
