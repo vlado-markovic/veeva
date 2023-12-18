@@ -1,5 +1,5 @@
 import requests
-import pandas as pd
+# import pandas as pd
 import json
 # import pymysql
 
@@ -15,7 +15,7 @@ f = open("responseD.json")
 new_record_data = f.read()
 
 
-with open('output.csv', 'r') as file:
+with open('new_record.csv', 'r') as file:
     csv_data = file.read()
 
 
@@ -40,6 +40,7 @@ headers_post = {"Authorization": token,
 def get_deploy_table_content():
     return requests.get(api_url + deployment_object_url + deployment_table_url, headers=headers_get).json()
     
+print (get_deploy_table_content())
 
 def create_new_record():
     response = requests.post(api_url + deployment_object_url + deployment_table_url, data=csv_data, headers=headers_post)
@@ -60,26 +61,25 @@ def read_deployment_status():
         # print (response_2['data'].get('build_status__c'))    
         if response_2['data'].get('build_status__c')[0] == 'ready_for_deployment__c':
             table_ids.append(table['id'])
-            # print(response_2['data']['build_status__c'], table['id'])
+            print(response_2['data']['build_status__c'], table['id'])
         
     return table_ids
 
+# read_deployment_status()
 
-
-read_deployment_status()
-
-
-
-
-
-def update_record(record_id, new_status):
+def update_records_ready_for_deployment():
     token = get_auth_token()
+    tables_for_deployment = read_deployment_status()
     headers = {"Authorization": token}
+    new_status = "Deployment Complete"
     data = {"build_status__c": new_status}
-    response = requests.put(api_url + f"objects/study_deployment__c/{record_id}", headers=headers, data=data)
-    return response.status_code == 200
+
+    for table in tables_for_deployment:
+        response = requests.put(api_url + deployment_object_url + deployment_table_url + table + "/", headers=headers, data=data)
+        print (response)
 
 
+# update_records_ready_for_deployment()
 
 
 
