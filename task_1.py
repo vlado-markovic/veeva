@@ -7,9 +7,10 @@ api_url = "https://sb-veevartsm-veeva-rtsm-sbx.veevavault.com/api/v20.3/"
 username = "test.user@sb-veevartsm.com"
 password = "Kaotiija5"
 auth_url = "auth/"
-deployment_table_url = "vobjects/"
+deployment_object_url = "vobjects/"
+deployment_table_url = "study_deployment__c/"
 new_record_name = "SDeploy_TEST123_TEST_2.3.8675.3090_dummy"
-deployment_status = 'build_status__c'
+deployment_status = 'build_status__c/'
 f = open("responseD.json")
 new_record_data = f.read()
 
@@ -24,6 +25,7 @@ def get_auth_token():
     
 token = get_auth_token()
 print(token)
+
 headers_get = {"Authorization": token,
            "Content-Type": "application/json",
            "Accept": "application/json"
@@ -36,46 +38,35 @@ headers_post = {"Authorization": token,
 
 
 def get_deploy_table_content():
-    return requests.get(api_url + deployment_table_url, headers=headers).json()
+    return requests.get(api_url + deployment_object_url + deployment_table_url, headers=headers_get).json()
     
 
 def create_new_record():
-    # data = get_deploy_table_content()
-    
-    # f = open(new_record_content)
-    # new_record_data = json.load(f)
-    
-    url_cre = api_url + deployment_table_url + new_record_name
-    
-    response = requests.post(api_url + deployment_table_url + new_record_name, data=csv_data, headers=headers_post)
-    
+    response = requests.post(api_url + deployment_object_url + deployment_table_url, data=csv_data, headers=headers_post)
+    print (response.text)
         
-    if response.status_code == 201:
+    if response.status_code == 200:
         print("New record added successfully")
     else:
         print(f"Failed to add new record: {response.status_code}, {response.text}")
 
 
-create_new_record()
 
-
-def read_study_deployment():
+def read_deployment_status(): 
     response = get_deploy_table_content()
-
+    table_ids = []
     for table in response['data']:            
-        response_2 = requests.get(api_url + deployment_table_url + table['id'] + "/", headers=headers_get).json()
-        print (response_2)    
+        response_2 = requests.get(api_url + deployment_object_url + deployment_table_url + table['id'] + "/", headers=headers_get).json()
+        # print (response_2['data'].get('build_status__c'))    
+        if response_2['data'].get('build_status__c')[0] == 'ready_for_deployment__c':
+            table_ids.append(table['id'])
+            # print(response_2['data']['build_status__c'], table['id'])
         
-        print(response_2['data']['build_status__c'])
-        
-        
-    # if response.status_code == 200:
-    #     return pd.DataFrame(response.json()['data'])
-    # else:
-    #     raise Exception("Failed to fetch records")
+    return table_ids
 
 
-# read_study_deployment()
+
+read_deployment_status()
 
 
 
@@ -84,7 +75,7 @@ def read_study_deployment():
 def update_record(record_id, new_status):
     token = get_auth_token()
     headers = {"Authorization": token}
-    data = {"status__c": new_status}
+    data = {"build_status__c": new_status}
     response = requests.put(api_url + f"objects/study_deployment__c/{record_id}", headers=headers, data=data)
     return response.status_code == 200
 
