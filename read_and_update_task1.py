@@ -68,18 +68,25 @@ def read_deployment_status():
 # read_deployment_status()
 
 def update_records_ready_for_deployment():
-    token = get_auth_token()
     tables_for_deployment = read_deployment_status()
-    headers = {"Authorization": token}
-    new_status = "Deployment Complete"
-    data = {"build_status__c": new_status}
+    new_status = "complete__c"
 
-    for table in tables_for_deployment:
-        response = requests.put(api_url + deployment_object_url + deployment_table_url + table + "/", headers=headers, data=data)
-        print (response)
+    for table_id in tables_for_deployment:
+        print(table_id)
+        data = {
+        "id": table_id,
+        "build_status__c": new_status}
+        response = requests.put(api_url + deployment_object_url + deployment_table_url, headers=headers_post, json=data)
+        print (response.request.body, data)
+        
+            
+        if response.status_code == 200:
+            print("Update successful")
+        else:
+            print("Update failed:", response.status_code, response.text)
 
 
-# update_records_ready_for_deployment()
+update_records_ready_for_deployment()
 
 
 
