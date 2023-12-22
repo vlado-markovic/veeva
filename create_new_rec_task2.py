@@ -16,3 +16,6 @@ def create_new_record():
         print("New record added successfully")
     else:
         print(f"Failed to add new record: {response.status_code}, {response.text}")
+        
+        
+create_new_record()

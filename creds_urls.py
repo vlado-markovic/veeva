@@ -31,3 +31,9 @@ headers_post = {"Authorization": get_auth_token(),
             "Content-Type": "text/csv",
             "Accept": "text/csv",
             }
+
+headers_put = {
+  'Content-Type': 'application/x-www-form-urlencoded',
+  'Authorization': get_auth_token()
+  }
+
