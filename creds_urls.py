@@ -1,4 +1,5 @@
 import requests
+import pymysql
 
 
 ## API CREDS
@@ -16,10 +17,13 @@ db_user = "veeva"
 db_password = "veeva"
 db_name = "veeva_vault"
 
+connection = pymysql.connect(host=db_host, user=db_user, password=db_password, db=db_name)
+
 # Token - Session ID
 def get_auth_token():
     return requests.post(api_url + auth_url,  data={"username": username, "password": password}).json()['sessionId']
 
+print(get_auth_token())
 
 ## HEADERS for get, post, and put
 headers_get = {"Authorization": get_auth_token(),

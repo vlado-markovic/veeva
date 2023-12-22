@@ -1,15 +1,13 @@
 import creds_urls
 import pymysql
 
-# - populate db with response data
-# - read table - find update field, then send post update
-# - create new rec by using the data from table
-
 
 # Establishing a connection to the database
 connection = pymysql.connect(host=creds_urls.db_host, user=creds_urls.db_user, password=creds_urls.db_password, db=creds_urls.db_name)
 
-
+build_status_key = "build_status__c"
+deploy_ready_value = "ready_for_deployment__c"
+deploy_complete_value = "complete__c"
 
 def read_from_table():
     try:
@@ -19,6 +17,26 @@ def read_from_table():
     except Exception as e:
         print(f"Error reading from table: {e}")
 
+# GET ID's from tables that contain ready_for_deployment__c status
+def get_table_ids_for_deployment(connection):
+    with connection.cursor() as cursor:
+
+        # Select records where build_status__c is 'ready_for_deployment__c'
+        select_sql = "SELECT id FROM deployment_data WHERE build_status__c = 'ready_for_deployment__c';"
+        print(cursor.execute(select_sql))
+        tables_for_deployment = [row[0] for row in cursor.fetchall()]
+        return tables_for_deployment
+
+
+# Update build_status__c if its value is ready_for_deployment__c
+def update_deployment_value_in_db(connection):
+    with connection.cursor() as cursor:
+
+        # Update records in the database
+        update_sql = "UPDATE deployment_data SET build_status__c = 'complete__C' WHERE build_status__c = 'ready_for_deployment__c'"
+        cursor.execute(update_sql)
+        connection.commit()
+    
 
 def create_record(build_status):
     pass
@@ -33,14 +51,6 @@ def delete(id):
     pass
 
 
-
-# Reading data from the database for further processing
-# data_from_db = read_from_table()
-
-# Process data_from_db as needed...
-
-# Your existing functions to interact with the API...
-# ...
 
 # Remember to close the database connection when done
 connection.close()

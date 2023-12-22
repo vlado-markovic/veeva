@@ -1,11 +1,8 @@
 import pymysql, creds_urls
 from read_and_update_task1 import get_table_content
 
-connection = pymysql.connect(host=creds_urls.db_host, user=creds_urls.db_user, password=creds_urls.db_password, db=creds_urls.db_name)
 
-
-
-def create_table():
+def create_table(connection):
     try:
         with connection.cursor() as cursor:
             # SQL to create table
@@ -49,7 +46,10 @@ def create_table():
             """
             cursor.execute(create_table_sql)
             connection.commit()
-
+            
+            # Check if the table was created
+            cursor.execute("SELECT 1 FROM deployment_data LIMIT 1")
+            
             # Query to get column names
             show_columns_sql = "SHOW COLUMNS FROM deployment_data;"
             cursor.execute(show_columns_sql)
@@ -103,15 +103,15 @@ def populate_table(json_data, connection):
 
 def populate_table_from__all_jsons(json_response):
     for data in json_response:
-        populate_table(data, connection)
+        populate_table(data, creds_urls.connection)
         
         
         
-# Create table
-create_table()        
+# Create table - uncomment if you are populating for the first time, if table exist it will skip this step anyways
+create_table(creds_urls.connection)
 
-# Populate the database with the initial GET response
+# Populate the database with the initial GET response from veeva vault
 populate_table_from__all_jsons(get_table_content())
 
 
-connection.close()
+creds_urls.connection.close()
