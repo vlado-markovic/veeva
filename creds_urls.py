@@ -5,7 +5,7 @@ import pymysql
 ## API CREDS
 api_url = "https://sb-veevartsm-veeva-rtsm-sbx.veevavault.com/api/v20.3/"
 username = "test.user@sb-veevartsm.com"
-password = "Kaotiija5"
+password = "****"
 auth_url = "auth/"
 deployment_object_url = "vobjects/"
 deployment_table_url = "study_deployment__c/"
